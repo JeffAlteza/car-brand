@@ -17,11 +17,18 @@ return new class extends Migration
             $table->integer('price');
             $table->string('description');
             $table->string('image')->nullable();
-            $table->integer('carable_id');
-            $table->string('carable_type');
+            // $table->integer('carable_id');
+            // $table->string('carable_type');
             // $table->foreignId('brand_id')->constrained('brands')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
+        });
+        
+        Schema::create('carables', function (Blueprint $table) {
+            // $table->unique(['carrable_id', 'carable_type']);
+            $table->foreignId('car_id')->constrained('cars')->onDelete('cascade');
+            $table->integer('carable_id');
+            $table->string('carable_type');
         });
         Schema::enableForeignKeyConstraints();
     }
@@ -32,5 +39,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('cars');
+        Schema::dropIfExists('carable');
     }
 };

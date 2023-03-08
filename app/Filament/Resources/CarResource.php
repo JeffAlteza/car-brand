@@ -7,10 +7,12 @@ use App\Filament\Resources\CarResource\RelationManagers\TagsRelationManager;
 use App\Models\Brand;
 use App\Models\Car;
 use App\Models\Tag;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Group;
+use Filament\Forms\Components\MorphToSelect;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -40,8 +42,6 @@ class CarResource extends Resource
         return $form
             ->schema([
                 Card::make([
-                    TextInput::make('brand_id')
-                        ->disabled(),
                     TextInput::make('name')
                         ->required()
                         ->maxLength(255),
@@ -54,35 +54,43 @@ class CarResource extends Resource
                     ->columnSpan(['lg' => 2]),
 
                 Group::make([
-                    Section::make(trans('Upload Image'))
+                    Section::make('Tags')
                         ->schema([
-                            // FileUpload::make('image')
-                            //     ->image()
-                            //     ->directory('car-images'),
-                            Cropper::make('image')
-                                ->enableDownload()
-                                ->enableOpen()
-                                ->enableImageRotation()
-                                ->enableImageFlipping()
-                                ->modalSize('xl')
-                                ->enabledAspectRatios([
-                                    '2:3', '9:16', '5:5'
-                                ])
-                                ->enableAspectRatioFreeMode(),
-                        ]),
-                    Section::make(trans('Tags'))
-                        ->schema([
-                            Select::make('tag')
+                            Select::make('tags')
                                 ->multiple()
-                                ->options(
-                                    fn () => Tag::orderBy('name')
-                                        ->pluck('name', 'id')
-                                        ->toArray()
-                                ),
+                                ->preload()
+                                ->relationship('tags', 'name')
                         ])
                 ])->columnSpan(['lg' => 1]),
+                // Section::make(trans('Belongs to'))
+                //     ->schema([
+                        
+                        // MorphToSelect::make('cars')
+                        //     ->label('Relationships')
+                        //     ->types([
+                        //         MorphToSelect\Type::make(Brand::class)->titleColumnName('name'),
+                        //         // MorphToSelect\Type::make(User::class)->titleColumnName('name'),
+                        //     ])
+                        //     ->required()
+                    // ])
+                    // ->columnSpan(['lg' => 1]),
+                Section::make(trans('Upload Image'))
+                    ->schema([
+                        Cropper::make('image')
+                            ->enableDownload()
+                            ->enableOpen()
+                            ->enableImageRotation()
+                            ->enableImageFlipping()
+                            ->modalSize('xl')
+                            ->enabledAspectRatios([
+                                '2:3', '9:16', '5:5'
+                            ])
+                            ->enableAspectRatioFreeMode(),
+                    ])
+                    ->columnSpan(['lg' => 1]),
 
-            ])->columns(3);
+
+            ])->columns(2);
     }
 
     public static function table(Table $table): Table
@@ -93,14 +101,14 @@ class CarResource extends Resource
                     ImageColumn::make('image')->circular()->grow(false),
                     Tables\Columns\TextColumn::make('name'),
                     Panel::make([
-                        Stack::make([
-                            Tables\Columns\TextColumn::make('brand.name'),
-                            Tables\Columns\TextColumn::make('price'),
-                            Tables\Columns\TextColumn::make('description')
-                                ->limit(20),
-                        ])
+                        // Stack::make([
+                        Tables\Columns\TextColumn::make('description')
+                            ->limit(20),
+                        Tables\Columns\TextColumn::make('price'),
+                        // Tables\Columns\TextColumn::make('brand.name'),
+                        // ])
                     ])->collapsible()
-                ])->from('md')
+                ])->from('sm')
             ])
             ->defaultSort('name', 'asc')
             ->filters([
@@ -119,12 +127,12 @@ class CarResource extends Resource
             ]);
     }
 
-    public static function getRelations(): array
-    {
-        return [
-            TagsRelationManager::class,
-        ];
-    }
+    // public static function getRelations(): array
+    // {
+    //     return [
+    //         TagsRelationManager::class,
+    //     ];
+    // }
 
     public static function getPages(): array
     {

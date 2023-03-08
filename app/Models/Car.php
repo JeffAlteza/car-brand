@@ -4,8 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Car extends Model
@@ -23,18 +23,23 @@ class Car extends Model
     ];
 
 
-    public function brand(): BelongsTo
+    public function brands(): MorphToMany
     {
-        return $this->BelongsTo(related: Brand::class);
+        return $this->morphedByMany(Brand::class, 'carable');
+    }
+
+    public function users(): MorphToMany
+    {
+        return $this->morphedByMany(User::class, 'carable');
     }
 
     public function tags(): BelongsToMany
     {
-        return $this->belongsToMany(related: Tag::class);
+        return $this->belongsToMany(Tag::class);
     }
 
-    public function carable()
-    {
-        return $this->morphTo();
-    }
+    // public function carable()
+    // {
+    //     return $this->morphTo();
+    // }
 }

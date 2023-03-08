@@ -5,8 +5,10 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\BrandResource\Pages;
 use App\Filament\Resources\BrandResource\RelationManagers;
 use App\Models\Brand;
+use App\Models\Car;
 use Filament\Forms;
 use Filament\Forms\Components\Fieldset;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Form;
@@ -32,12 +34,16 @@ class BrandResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
-                Fieldset::make('Cars')
-                    ->relationship('cars')
-                    ->schema([
-                        TextInput::make('name')->required(),
-                        Textarea::make('bio'),
-                    ])
+                Select::make('cars')
+                    ->multiple()
+                    ->preload()
+                    ->relationship('cars', 'name')
+                // Fieldset::make('Cars')
+                //     ->relationship('cars')
+                //     ->schema([
+                //         TextInput::make('name')->required(),
+                //         Textarea::make('bio'),
+                //     ])
             ]);
     }
 
