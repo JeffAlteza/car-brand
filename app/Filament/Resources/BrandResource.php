@@ -4,8 +4,8 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\BrandResource\Pages;
 use App\Filament\Resources\BrandResource\RelationManagers;
-use App\Models\Brand;
 use App\Models\Car;
+use Domain\Brand\Models\Brand;
 use Filament\Forms;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Select;

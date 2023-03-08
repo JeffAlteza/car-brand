@@ -4,10 +4,9 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\CarResource\Pages;
 use App\Filament\Resources\CarResource\RelationManagers\TagsRelationManager;
-use App\Models\Brand;
-use App\Models\Car;
 use App\Models\Tag;
 use App\Models\User;
+use Domain\Car\Models\Car;
 use Filament\Forms;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\FileUpload;
